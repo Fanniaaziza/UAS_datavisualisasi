@@ -4,3 +4,6 @@ sqlalchemy
 pandas
 matplotlib
 mysql.connector
+beautifulsoup4
+cloudscraper
+selenium
