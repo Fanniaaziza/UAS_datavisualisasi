@@ -163,9 +163,14 @@ plt.xticks(rotation=45)
 st.markdown("<h2 style='text-align: center;'>4. Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
 st.pyplot(fig)
 
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt 
+# Menampilkan judul di halaman web
+st.title("Final Project Data Visualisasi")
+
+# Menambahkan sidebar
+option = st.sidebar.selectbox(
+    'Pilih data yang ingin ditampilkan:',
+    ('IMDB Top Movies', 'Adventure Works')
+)
 
 # Nama file CSV
 fn1 = 'imdb.csv'
