@@ -162,3 +162,59 @@ plt.xticks(rotation=45)
 # Menampilkan plot di Streamlit
 st.markdown("<h2 style='text-align: center;'>4. Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
 st.pyplot(fig)
+
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt 
+
+# Nama file CSV
+fn1 = 'imdb.csv'
+
+# Membaca file CSV ke dalam DataFrame dengan encoding 'latin1'
+df1 = pd.read_csv(fn1, encoding='latin1')
+
+# Tambahkan sedikit CSS untuk mempercantik tampilan tabel
+st.markdown(
+    f"""
+    <style>
+    table {{ 
+        color: #333;
+        font-family: Arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ccc;
+    }}
+    table th {{ 
+        background-color: #f2f2f2;
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ccc;
+    }}
+    table td {{ 
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ccc;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
+# Menampilkan judul "New Movies"
+st.title('New Movies')
+
+# Menampilkan DataFrame sebagai tabel di Streamlit
+st.write(df1)
+
+# Visualisasi Bar Chart Rating untuk Setiap Judul Film
+st.subheader('Bar Chart Rating untuk Setiap Judul Film')
+
+# Grupkan data berdasarkan judul film dan rating
+grouped_df = df1.groupby('Rate')['Judul'].first().reset_index()
+
+# Plot bar chart dengan sumbu judul di y dan rating di x
+plt.figure(figsize=(12, 8))
+plt.barh(grouped_df['Judul'], grouped_df['Rate'], color='skyblue')  # Menggunakan plt.barh untuk horizontal bar chart
+plt.xlabel('Rating')
+plt.ylabel('Judul Film')
+plt.title('Bar Chart Rating untuk Setiap Judul Film')
+plt.grid(True)
+st.pyplot(plt)
