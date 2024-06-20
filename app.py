@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-# Fungsi untuk memuat data Adventure Works
+# Function to load Adventure Works data
 def load_adventure_works_data():
     conn = pymysql.connect(
         host="kubela.id",
@@ -13,7 +13,7 @@ def load_adventure_works_data():
         database="aw"
     )
 
-    # Query SQL untuk mengambil data penjualan per tahun
+    # SQL query to fetch yearly sales data
     query_sales = """
         SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
         FROM dimtime
@@ -29,47 +29,102 @@ def load_adventure_works_data():
     conn.close()
     return df_sales
 
-# Fungsi untuk memuat data IMDB
+# Function to load IMDB data
 def load_imdb_data():
-    fn1 = 'imdb.csv'
-    return pd.read_csv(fn1, encoding='latin1')
+    fn1 = 'IMDB-TOP.csv'
+    return pd.read_csv(fn1, encoding='latin1').head(10)  # Using only the first 10 rows
 
-# Load Adventure Works data
-df_sales = load_adventure_works_data()
-
-# Menampilkan judul di halaman web
+# Streamlit app title
 st.title("Final Project Mata Kuliah Data Visualisasi")
 
-# Menambahkan sidebar
+# Sidebar option to select data to display
 option = st.sidebar.selectbox(
     'Pilih data yang ingin ditampilkan:',
     ('IMDB Top Movies', 'Adventure Works')
 )
 
+# Handling IMDB Top Movies data
 if option == 'IMDB Top Movies':
     df_imdb = load_imdb_data()
     st.title("Scraping Website IMDB")
     st.write(df_imdb)
 
-    # Visualisasi Bar Chart Rating untuk Setiap Judul Film
-    st.subheader('Bar Chart Rating untuk Setiap Judul Film')
+    # Check if necessary columns exist
+    expected_columns = ['judul', 'tahun', 'durasi', 'age', 'rate']  # Expected columns
+    if set(expected_columns).issubset(df_imdb.columns):
+        # 1. Comparison Visualization: Number of Movies per Year
+        year_counts = df_imdb['tahun'].value_counts().sort_index()
 
-    # Grupkan data berdasarkan judul film dan rating
-    grouped_df = df_imdb.groupby('Rate')['Judul'].first().reset_index()
+        plt.figure(figsize=(10, 6))
+        plt.bar(year_counts.index.astype(str), year_counts.values, color='skyblue')
+        plt.title('Perbandingan Jumlah Film per Tahun')
+        plt.xlabel('Tahun')
+        plt.ylabel('Jumlah Film')
+        plt.xticks(rotation=45)
+        plt.grid(True)
+        st.pyplot(plt)
 
-    # Plot bar chart dengan sumbu judul di y dan rating di x
-    plt.figure(figsize=(12, 8))
-    plt.barh(grouped_df['Judul'], grouped_df['Rate'], color='skyblue')  # Menggunakan plt.barh untuk horizontal bar chart
-    plt.xlabel('Rating')
-    plt.ylabel('Judul Film')
-    plt.title('Bar Chart Rating untuk Setiap Judul Film')
-    plt.grid(True)
-    st.pyplot(plt)
+        st.markdown("""
+        Visualisasi ini menggunakan grafik batang untuk menunjukkan bagaimana jumlah film berubah dari tahun ke tahun dalam dataset IMDB-TOP.csv. 
+        Grafik ini memberikan gambaran tentang seberapa aktifnya industri film dalam periode waktu yang dianalisis.
+        """)
+        
+        # 2. Relationship Visualization: Scatter Plot of Film Duration vs Rate
+        plt.figure(figsize=(10, 6))
+        plt.scatter(df_imdb['durasi'], df_imdb['rate'], alpha=0.5, color='orange')
+        plt.title('Hubungan Antara Durasi Film dan Rate')
+        plt.xlabel('Durasi Film (Menit)')
+        plt.ylabel('Rate')
+        plt.grid(True)
+        st.pyplot(plt)
 
+        st.markdown("""
+        Scatter plot ini memvisualisasikan hubungan antara durasi film (sumbu x) dan rating IMDb (sumbu y). 
+        Setiap titik merepresentasikan satu film dalam dataset. Pada plot ini, kita dapat melihat pola atau tren umum antara durasi film dengan rating IMDb, 
+        meskipun tidak terlalu jelas dalam 10 data pertama yang ditampilkan.
+        """)
+            
+        # 3. Distribution Visualization: Histogram of Film Duration Distribution
+        plt.figure(figsize=(10, 6))
+        plt.hist(df_imdb['durasi'], bins=20, color='green', edgecolor='black')
+        plt.title('Distribusi Durasi Film')
+        plt.xlabel('Durasi Film (Menit)')
+        plt.ylabel('Frekuensi')
+        plt.grid(True)
+        st.pyplot(plt)
+
+        st.markdown("""
+        Histogram ini menunjukkan distribusi frekuensi durasi film dalam dataset. 
+        Dengan membagi durasi film ke dalam beberapa bin, plot ini memberikan gambaran visual tentang sebaran durasi film yang ada. 
+        Warna hijau digunakan untuk menyoroti distribusi ini, sementara garis tepi hitam menambahkan detail visual.
+        """)
+            
+        # 4. Composition Visualization: Pie Chart of Movie Count per Age Rating
+        age_counts = df_imdb['age'].value_counts()
+
+        plt.figure(figsize=(8, 8))
+        plt.pie(age_counts, labels=age_counts.index, autopct='%1.1f%%', startangle=140)
+        plt.title('Komposisi Film Berdasarkan Age Rating')
+        plt.axis('equal')
+        st.pyplot(plt)
+
+        st.markdown("""
+        Pie chart ini memvisualisasikan komposisi jumlah film berdasarkan rating usia (Age Rating) dalam dataset. 
+        Setiap sektor dalam pie chart mewakili persentase dari jumlah total film dalam kategori rating usia yang berbeda. 
+        Chart ini membantu kita melihat seberapa beragam usia target penonton untuk film-film dalam dataset.
+        """)
+
+    else:
+        st.write("Kolom yang diperlukan (judul, tahun, durasi, age, rate) tidak lengkap dalam dataset.")
+
+# Handling Adventure Works data
 else:
     st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
 
-    # Menampilkan DataFrame di Streamlit dalam bentuk tabel
+    # Load Adventure Works data
+    df_sales = load_adventure_works_data()
+
+    # Display DataFrame in Streamlit as a table
     st.subheader('1. Data Penjualan Tahunan')
     st.dataframe(df_sales)
 
@@ -80,13 +135,13 @@ else:
             df_sales['Year'] = pd.to_numeric(df_sales['Year'], errors='coerce').fillna(0).astype(int)
             tahun_options = range(df_sales['Year'].min(), df_sales['Year'].max() + 1)
 
-            # Pilihan untuk memilih rentang tahun menggunakan slider
+            # Option to select year range using a slider
             year_range = st.slider('Pilih Rentang Tahun:', min_value=min(tahun_options), max_value=max(tahun_options), value=(min(tahun_options), max(tahun_options)), step=1)
 
-            # Filter data berdasarkan rentang tahun yang dipilih
+            # Filter data based on selected year range
             df_filtered = df_sales[(df_sales['Year'] >= year_range[0]) & (df_sales['Year'] <= year_range[1])]
 
-            # Plot perbandingan total penjualan per tahun dengan Matplotlib
+            # Plot comparison of total sales per year using Matplotlib
             plt.figure(figsize=(12, 6))
             plt.plot(df_filtered['Year'], df_filtered['TotalSales'], marker='o', linestyle='-', color='b', linewidth=2, markersize=8)
             plt.title(f'Perbandingan Total Penjualan Tahun {year_range[0]}-{year_range[1]}', fontsize=16)
@@ -94,7 +149,7 @@ else:
             plt.ylabel('Total Penjualan', fontsize=14)
             plt.grid(True)
 
-            # Menampilkan plot di Streamlit
+            # Display plot in Streamlit
             st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
             st.pyplot(plt)
         except Exception as e:
@@ -102,7 +157,7 @@ else:
     else:
         st.warning('Tidak ada data penjualan tersedia.')
 
-    # Query data untuk bubble plot
+    # Query data for bubble plot
     query_bubble = '''
     SELECT 
       st.SalesTerritoryRegion AS Country,
@@ -123,33 +178,33 @@ else:
 
     df_bubble = pd.read_sql(query_bubble, conn)
 
-      # Menampilkan DataFrame di Streamlit dalam bentuk tabel
+    # Display DataFrame in Streamlit as a table
     st.subheader('2. Hubungan Penjualan berdasarkan region')
     st.dataframe(df_bubble)
 
-    # Tambahkan argumen s untuk ukuran bubble
+    # Adjust bubble size for better visibility
     plt.figure(figsize=(14, 12))
     plt.scatter(x=df_bubble['Country'], 
                 y=df_bubble['TotalSales'],
-                s=df_bubble['TotalSales'] / 1000,  # Ukuran bubble diatur lebih kecil untuk visibilitas yang lebih baik
+                s=df_bubble['TotalSales'] / 1000,  # Adjust bubble size smaller for better visibility
                 c='b',
-                alpha=0.6,  # Menambahkan transparansi untuk visibilitas yang lebih baik
-                edgecolors='w',  # Menambahkan border putih pada bubble
+                alpha=0.6,  # Add transparency for better visibility
+                edgecolors='w',  # Add white border to bubbles
                 linewidth=0.5)
 
-    # Menambahkan label untuk sumbu x dan y serta judul plot
+    # Add labels for x and y axis and plot title
     plt.xlabel('Country')
     plt.ylabel('Total Sales')  
     plt.title('Bubble Plot Hubungan Wilayah dan Penjualan')
 
-    # Menambahkan grid untuk memudahkan pembacaan plot
+    # Add grid for easier reading of the plot
     plt.grid(True)
 
-    # Menampilkan plot di Streamlit
+    # Display plot in Streamlit
     st.markdown("<h2 style='text-align: center;'>Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
-    # Query data untuk pie chart
+    # Query data for pie chart
     query_pie = '''
     SELECT
         st.SalesTerritoryRegion,
@@ -164,21 +219,21 @@ else:
 
     df_sales_by_region = pd.read_sql(query_pie, conn)
 
-    # Menampilkan DataFrame di Streamlit dalam bentuk tabel
+    # Display DataFrame in Streamlit as a table
     st.subheader('3. Proporsi Penjualan Berdasarkan Wilayah atau Region')
     st.dataframe(df_sales_by_region)
 
-    # Buat visualisasi proporsi penjualan per wilayah atau region
+    # Create visualization of sales proportion per region
     plt.figure(figsize=(10, 6))
     plt.pie(df_sales_by_region['TotalSales'], labels=df_sales_by_region['SalesTerritoryRegion'], autopct='%1.1f%%', startangle=140)
     plt.title('Proporsi Penjualan per Wilayah atau Region')
-    plt.axis('equal')  # Membuat pie chart menjadi lingkaran
+    plt.axis('equal')  # Make pie chart a circle
 
-    # Menampilkan plot di Streamlit
+    # Display plot in Streamlit
     st.markdown("<h2 style='text-align: center;'>Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
-    # Query data untuk bar plot
+    # Query data for bar chart
     query_bar = '''
     SELECT
         pc.EnglishProductCategoryName AS ProductCategory,
@@ -197,27 +252,27 @@ else:
 
     df_bar = pd.read_sql(query_bar, conn)
 
-    # Menampilkan DataFrame di Streamlit dalam bentuk tabel
+    # Display DataFrame in Streamlit as a table
     st.subheader('4. Komposisi Penjualan Berdasarkan Kategori Produk')
     st.dataframe(df_bar)
 
-    # Menutup koneksi setelah selesai digunakan
-    conn.close()
-
-    # Buat figure dan axes
+    # Create figure and axes
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Plot bar (lebih cocok daripada histogram untuk kategori)
+    # Plot bar (more suitable than histogram for categories)
     ax.bar(df_bar['ProductCategory'], df_bar['TotalSales'], color='blue')
 
-    # Setting label        
+    # Setting labels        
     ax.set(title='Komposisi Penjualan per Kategori Produk',
            ylabel='Total Penjualan',   
            xlabel='Kategori Produk')
 
-    # Rotasi label x untuk lebih baik
+    # Rotate x labels for better readability
     plt.xticks(rotation=45)
 
-    # Menampilkan plot di Streamlit
+    # Display plot in Streamlit
     st.markdown("<h2 style='text-align: center;'>Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
     st.pyplot(fig)
+
+    # Close connection after usage
+    conn.close()
