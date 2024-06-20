@@ -123,6 +123,10 @@ else:
 
     df_bubble = pd.read_sql(query_bubble, conn)
 
+      # Menampilkan DataFrame di Streamlit dalam bentuk tabel
+    st.subheader('2. Hubungan Penjualan berdasarkan region')
+    st.dataframe(df_bubble)
+
     # Tambahkan argumen s untuk ukuran bubble
     plt.figure(figsize=(14, 12))
     plt.scatter(x=df_bubble['Country'], 
