@@ -146,7 +146,7 @@ else:
     plt.grid(True)
 
     # Menampilkan plot di Streamlit
-    st.markdown("<h2 style='text-align: center;'>2. Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
     # Query data untuk pie chart
@@ -164,6 +164,10 @@ else:
 
     df_sales_by_region = pd.read_sql(query_pie, conn)
 
+    # Menampilkan DataFrame di Streamlit dalam bentuk tabel
+    st.subheader('3. Proporsi Penjualan Berdasarkan Wilayah atau Region')
+    st.dataframe(df_sales_by_region)
+
     # Buat visualisasi proporsi penjualan per wilayah atau region
     plt.figure(figsize=(10, 6))
     plt.pie(df_sales_by_region['TotalSales'], labels=df_sales_by_region['SalesTerritoryRegion'], autopct='%1.1f%%', startangle=140)
@@ -171,7 +175,7 @@ else:
     plt.axis('equal')  # Membuat pie chart menjadi lingkaran
 
     # Menampilkan plot di Streamlit
-    st.markdown("<h2 style='text-align: center;'>3. Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
     # Query data untuk bar plot
@@ -193,6 +197,10 @@ else:
 
     df_bar = pd.read_sql(query_bar, conn)
 
+    # Menampilkan DataFrame di Streamlit dalam bentuk tabel
+    st.subheader('4. Komposisi Penjualan Berdasarkan Kategori Produk')
+    st.dataframe(df_bar)
+
     # Menutup koneksi setelah selesai digunakan
     conn.close()
 
@@ -211,5 +219,5 @@ else:
     plt.xticks(rotation=45)
 
     # Menampilkan plot di Streamlit
-    st.markdown("<h2 style='text-align: center;'>4. Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
     st.pyplot(fig)
