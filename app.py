@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 # Fungsi untuk memuat Adventure Works data
 def load_adventure_works_data():
     conn = pymysql.connect(
-        host="kubela.id",
-        port=3306,
-        user="davis2024irwan",
-        password="wh451n9m@ch1n3",
-        database="aw"
+        host=st.secrets["mysql"]["host"],
+        port=st.secrets["mysql"]["port"],
+        user=st.secrets["mysql"]["user"],
+        password=st.secrets["mysql"]["password"],
+        database=st.secrets["mysql"]["database"]
     )
 
     # SQL query untuk mengambil yearly sales data
@@ -204,11 +204,11 @@ else:
     '''
 
     conn = pymysql.connect(
-        host="kubela.id",
-        port=3306,
-        user="davis2024irwan",
-        password="wh451n9m@ch1n3",
-        database="aw"
+        host=st.secrets["mysql"]["host"],
+        port=st.secrets["mysql"]["port"],
+        user=st.secrets["mysql"]["user"],
+        password=st.secrets["mysql"]["password"],
+        database=st.secrets["mysql"]["database"]
     )
 
     df_bubble = pd.read_sql(query_bubble, conn)
