@@ -35,7 +35,40 @@ def load_imdb_data():
     return pd.read_csv(fn1, encoding='latin1').head(10)  # Using only the first 10 rows
 
 # Streamlit title
-st.title("Final Project Mata Kuliah Data Visualisasi")
+st.markdown("""
+    <style>
+    .title {
+        font-size: 50px;
+        font-weight: bold;
+        color: #4b4b4b;
+        text-align: center;
+        background: -webkit-linear-gradient(45deg, #fc466b, #3f5efb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    </style>
+    <h1 class="title">Final Project Mata Kuliah Data Visualisasi</h1>
+    """, unsafe_allow_html=True)
+
+# Custom CSS for styling
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f5f5f5;
+    }
+    h1, h2 {
+        color: #4b4b4b;
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+    }
+    .css-1aumxhk {
+        color: #4b4b4b;
+    }
+    .sidebar .sidebar-content {
+        background-color: #f0f0f0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Sidebar option untuk memilih data di display
 option = st.sidebar.selectbox(
