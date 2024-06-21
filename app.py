@@ -197,13 +197,7 @@ else:
     GROUP BY Country
     '''
 
-    conn = pymysql.connect(
-        host="kubela.id",
-        port=3306,
-        user="davis2024irwan",
-        password="wh451n9m@ch1n3",
-        database="aw"
-    )
+    conn = st.connection("mydb" type="sql", autocommit=True)
 
     df_bubble = pd.read_sql(query_bubble, conn)
 
