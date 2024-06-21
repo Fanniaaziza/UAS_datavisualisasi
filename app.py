@@ -12,7 +12,7 @@ def load_adventure_works_data():
         password=st.secrets["mysql"]["password"],
         database=st.secrets["mysql"]["database"]
     )
-
+    
     # SQL query untuk mengambil yearly sales data
     query_sales = """
         SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
