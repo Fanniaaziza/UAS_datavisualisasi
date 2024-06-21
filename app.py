@@ -46,7 +46,7 @@ option = st.sidebar.selectbox(
 # Handling IMDB Top Movies data
 if option == 'IMDB Top Movies':
     df_imdb = load_imdb_data()
-    st.title("<h1 style='text-align: center; color: black;'>Scraping Website IMDB</h1>", unsafe_allow_html=True)
+    st.write("<h1 style='text-align: center; color: black;'>Scraping Website IMDB</h1>", unsafe_allow_html=True)
     st.write(df_imdb)
 
     # Check keberadaan kolom
