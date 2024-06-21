@@ -69,7 +69,7 @@ if option == 'IMDB Top Movies':
         seperti pada tahun 1994 film baru mencapai 2 film. Berbeda dengan tahun sebelumnya yang hanya ada 1 film. 
         """)
         
-        # 2. Relationship Visualization: Scatter Plot of Film Duration vs Rate
+        # 2. Relationship : Scatter Plot of Film Duration vs Rate
         plt.figure(figsize=(10, 6))
         plt.scatter(df_imdb['durasi'], df_imdb['rate'], alpha=0.5, color='orange')
         plt.title('Hubungan Antara Durasi Film dan Rate')
@@ -83,7 +83,7 @@ if option == 'IMDB Top Movies':
          yang digambarkan dengan terbentuknya pola tren.  
         """)
             
-        # 3. Distribution Visualization: Histogram of Film Duration Distribution
+        # 3. Distribution : Histogram of Film Duration Distribution
         plt.figure(figsize=(10, 6))
         plt.hist(df_imdb['durasi'], bins=20, color='green', edgecolor='black')
         plt.title('Distribusi Durasi Film')
@@ -97,7 +97,7 @@ if option == 'IMDB Top Movies':
         dari visualisasi tersebut dapat disimpulkan frekuensi dari masing-masing durasi film yang ada adalah sama, yakni memiliki 1 frekuensi.
         """)
             
-        # 4. Composition Visualization: Pie Chart of Movie Count per Age Rating
+        # 4. Composition : Pie Chart of Movie Count per Age Rating
         age_counts = df_imdb['age'].value_counts()
 
         plt.figure(figsize=(8, 8))
@@ -118,24 +118,24 @@ if option == 'IMDB Top Movies':
 else:
     st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
 
-    # Load Adventure Works data
+    # Memuat Adventure Works data
     df_sales = load_adventure_works_data()
 
-    # Display DataFrame in Streamlit as a table
+    # Menampilkan DataFrame di Streamlit sebagai tabel
     st.subheader('1. Data Penjualan Tahunan')
     st.dataframe(df_sales)
 
-    # Check if the DataFrame is not empty
+    # cek DataFrame memastikan tidak kosong 
     if not df_sales.empty:
         try:
-            # Ensure Year column is of integer type
+            # Memastikan kolom Year merupakan integer
             df_sales['Year'] = pd.to_numeric(df_sales['Year'], errors='coerce').fillna(0).astype(int)
             tahun_options = range(df_sales['Year'].min(), df_sales['Year'].max() + 1)
 
-            # Option to select year range using a slider
+            # Pilihan untuk select year range menggunakan slider
             year_range = st.slider('Pilih Rentang Tahun:', min_value=min(tahun_options), max_value=max(tahun_options), value=(min(tahun_options), max(tahun_options)), step=1)
 
-            # Filter data based on selected year range
+            # Filter data berdasarkan year range
             df_filtered = df_sales[(df_sales['Year'] >= year_range[0]) & (df_sales['Year'] <= year_range[1])]
 
             # Plot comparison of total sales per year using Matplotlib
@@ -159,7 +159,7 @@ else:
     else:
         st.warning('Tidak ada data penjualan tersedia.')
 
-    # Query data for bubble plot
+    # Query data bubble plot
     query_bubble = '''
     SELECT 
       st.SalesTerritoryRegion AS Country,
@@ -180,7 +180,7 @@ else:
 
     df_bubble = pd.read_sql(query_bubble, conn)
 
-    # Display DataFrame in Streamlit as a table
+    # Menampilkan DataFrame di Streamlit sebagai tabel
     st.subheader('2. Hubungan Penjualan berdasarkan region')
     st.dataframe(df_bubble)
 
@@ -199,10 +199,10 @@ else:
     plt.ylabel('Total Sales')  
     plt.title('Bubble Plot Hubungan Wilayah dan Penjualan')
 
-    # Add grid for easier reading of the plot
+    # Menambahkan grid untuk memudahkan membaca plot
     plt.grid(True)
 
-    # Display plot in Streamlit
+    # Display plot di Streamlit
     st.markdown("<h2 style='text-align: center;'>Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
@@ -211,7 +211,7 @@ else:
         daerah yang luas dan lebih besar cenderung menghasilkan penjualan produk yang besar pula.
     """)
 
-    # Query data for pie chart
+    # Query data pie chart
     query_pie = '''
     SELECT
         st.SalesTerritoryRegion,
@@ -226,7 +226,7 @@ else:
 
     df_sales_by_region = pd.read_sql(query_pie, conn)
 
-    # Display DataFrame in Streamlit as a table
+    # Menampilkan DataFrame di Streamlit sebagai tabel
     st.subheader('3. Proporsi Penjualan Berdasarkan Wilayah atau Region')
     st.dataframe(df_sales_by_region)
 
@@ -236,7 +236,7 @@ else:
     plt.title('Proporsi Penjualan per Wilayah atau Region')
     plt.axis('equal')  # Make pie chart a circle
 
-    # Display plot in Streamlit
+    # Display plot di Streamlit
     st.markdown("<h2 style='text-align: center;'>Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
@@ -245,7 +245,7 @@ else:
         prosentase penjualan tertinggi.
     """)
 
-    # Query data for bar chart
+    # Query data bar chart
     query_bar = '''
     SELECT
         pc.EnglishProductCategoryName AS ProductCategory,
@@ -264,11 +264,11 @@ else:
 
     df_bar = pd.read_sql(query_bar, conn)
 
-    # Display DataFrame in Streamlit as a table
+    # Menampilkan DataFrame di Streamlit sebagai tabel
     st.subheader('4. Komposisi Penjualan Berdasarkan Kategori Produk')
     st.dataframe(df_bar)
 
-    # Create figure and axes
+    # Membuat figure and axes
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Plot bar (more suitable than histogram for categories)
@@ -282,7 +282,7 @@ else:
     # Rotate x labels for better readability
     plt.xticks(rotation=45)
 
-    # Display plot in Streamlit
+    # Display plot di Streamlit
     st.markdown("<h2 style='text-align: center;'>Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
     st.pyplot(fig)
 
@@ -290,7 +290,7 @@ else:
         Dari visualisasi di atas dapat dilihat distribusi penjualan berdasarkan dari jenis produknya, penjualan terbesar berasal dari produk sepeda.
     """)
 
-    # Close connection after usage
+    # Menutup koneksi setelah digunakan
     conn.close()
 
 # Menampilkan informasi data diri
