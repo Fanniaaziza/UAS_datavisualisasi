@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-# Function to load Adventure Works data
+# Fungsi untuk memuat Adventure Works data
 def load_adventure_works_data():
     conn = pymysql.connect(
         host="kubela.id",
@@ -13,7 +13,7 @@ def load_adventure_works_data():
         database="aw"
     )
 
-    # SQL query to fetch yearly sales data
+    # SQL query untuk mengambil yearly sales data
     query_sales = """
         SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
         FROM dimtime
@@ -23,21 +23,21 @@ def load_adventure_works_data():
     """
     df_sales = pd.read_sql(query_sales, conn)
     
-    # Ensure Year column is of integer type
+    # Memastikan kolom year adalah integer
     df_sales['Year'] = pd.to_numeric(df_sales['Year'], errors='coerce').fillna(0).astype(int)
     
     conn.close()
     return df_sales
 
-# Function to load IMDB data
+# Fungsi memuat IMDB data
 def load_imdb_data():
     fn1 = 'IMDB-TOP.csv'
     return pd.read_csv(fn1, encoding='latin1').head(10)  # Using only the first 10 rows
 
-# Streamlit app title
+# Streamlit title
 st.title("Final Project Mata Kuliah Data Visualisasi")
 
-# Sidebar option to select data to display
+# Sidebar option untuk memilih data di display
 option = st.sidebar.selectbox(
     'Pilih data yang ingin ditampilkan:',
     ('IMDB Top Movies', 'Adventure Works')
@@ -49,10 +49,10 @@ if option == 'IMDB Top Movies':
     st.title("Scraping Website IMDB")
     st.write(df_imdb)
 
-    # Check if necessary columns exist
-    expected_columns = ['judul', 'tahun', 'durasi', 'age', 'rate']  # Expected columns
+    # Check keberadaan kolom
+    expected_columns = ['judul', 'tahun', 'durasi', 'age', 'rate']  # kolom yang diharapkan
     if set(expected_columns).issubset(df_imdb.columns):
-        # 1. Comparison Visualization: Number of Movies per Year
+        # 1. Comparison : Number of Movies per Year
         year_counts = df_imdb['tahun'].value_counts().sort_index()
 
         plt.figure(figsize=(10, 6))
@@ -65,8 +65,8 @@ if option == 'IMDB Top Movies':
         st.pyplot(plt)
 
         st.markdown("""
-        Visualisasi ini menggunakan grafik batang untuk menunjukkan bagaimana jumlah film berubah dari tahun ke tahun dalam dataset IMDB-TOP.csv. 
-        Grafik ini memberikan gambaran tentang seberapa aktifnya industri film dalam periode waktu yang dianalisis.
+        Dari visualisasi tersebut dapat di analisis bahwa jumlah film dapat berubah tiap tahunnya, 
+        seperti pada tahun 1994 film baru mencapai 2 film. Berbeda dengan tahun sebelumnya yang hanya ada 1 film. 
         """)
         
         # 2. Relationship Visualization: Scatter Plot of Film Duration vs Rate
@@ -79,9 +79,8 @@ if option == 'IMDB Top Movies':
         st.pyplot(plt)
 
         st.markdown("""
-        Scatter plot ini memvisualisasikan hubungan antara durasi film (sumbu x) dan rating IMDb (sumbu y). 
-        Setiap titik merepresentasikan satu film dalam dataset. Pada plot ini, kita dapat melihat pola atau tren umum antara durasi film dengan rating IMDb, 
-        meskipun tidak terlalu jelas dalam 10 data pertama yang ditampilkan.
+         Dari visualisasi tersebut dapat di analisis bahwa terdapat hubungan antara durasi film dan rating 
+         yang digambarkan dengan terbentuknya pola tren.  
         """)
             
         # 3. Distribution Visualization: Histogram of Film Duration Distribution
@@ -94,9 +93,8 @@ if option == 'IMDB Top Movies':
         st.pyplot(plt)
 
         st.markdown("""
-        Histogram ini menunjukkan distribusi frekuensi durasi film dalam dataset. 
-        Dengan membagi durasi film ke dalam beberapa bin, plot ini memberikan gambaran visual tentang sebaran durasi film yang ada. 
-        Warna hijau digunakan untuk menyoroti distribusi ini, sementara garis tepi hitam menambahkan detail visual.
+        Dari visualisasi tersebut menggambarkan distribusi durasi film yang ada, 
+        dari visualisasi tersebut dapat disimpulkan frekuensi dari masing-masing durasi film yang ada adalah sama, yakni memiliki 1 frekuensi.
         """)
             
         # 4. Composition Visualization: Pie Chart of Movie Count per Age Rating
@@ -109,9 +107,8 @@ if option == 'IMDB Top Movies':
         st.pyplot(plt)
 
         st.markdown("""
-        Pie chart ini memvisualisasikan komposisi jumlah film berdasarkan rating usia (Age Rating) dalam dataset. 
-        Setiap sektor dalam pie chart mewakili persentase dari jumlah total film dalam kategori rating usia yang berbeda. 
-        Chart ini membantu kita melihat seberapa beragam usia target penonton untuk film-film dalam dataset.
+        Dari visualisasi tersebut dapat di analisis bahwa film-film ditonton dari berbagai kalangan usia, 
+        pada pie chart tersebut dapat disimpulkan kalangan yang menonton film rata-rata adalah usia remaja. 
         """)
 
     else:
