@@ -128,7 +128,7 @@ if option == 'IMDB Top Movies':
         st.markdown(""" <p style='color: black;'>
         Dari visualisasi tersebut menggambarkan distribusi durasi film yang ada, 
         dari visualisasi tersebut dapat disimpulkan frekuensi dari masing-masing durasi film yang ada adalah sama, yakni memiliki 1 frekuensi.</p>
-        """,unsafe_allow_html=True))
+        """,unsafe_allow_html=True)
         
         # 4. Composition : Pie Chart of Movie Count per Age Rating
         age_counts = df_imdb['age'].value_counts()
@@ -214,7 +214,7 @@ else:
     df_bubble = pd.read_sql(query_bubble, conn)
 
     # Menampilkan DataFrame di Streamlit sebagai tabel
-    st.subheader("<p style='color: black; font-size: 18px;'>2. Hubungan Penjualan berdasarkan region</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: black; font-size: 18px;'>2. Hubungan Penjualan berdasarkan region</p>", unsafe_allow_html=True)
     st.dataframe(df_bubble)
 
     # Adjust bubble size for better visibility
@@ -260,7 +260,7 @@ else:
     df_sales_by_region = pd.read_sql(query_pie, conn)
 
     # Menampilkan DataFrame di Streamlit sebagai tabel
-    st.subheader("<p style='color: black; font-size: 18px;'>3. Proporsi Penjualan Berdasarkan Wilayah atau Region</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: black; font-size: 18px;'>3. Proporsi Penjualan Berdasarkan Wilayah atau Region</p>", unsafe_allow_html=True)
     st.dataframe(df_sales_by_region)
 
     # Create visualization of sales proportion per region
@@ -298,7 +298,7 @@ else:
     df_bar = pd.read_sql(query_bar, conn)
 
     # Menampilkan DataFrame di Streamlit sebagai tabel
-    st.subheader("<p style='color: black; font-size: 18px;'>4. Komposisi Penjualan Berdasarkan Kategori Produk</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: black; font-size: 18px;'>4. Komposisi Penjualan Berdasarkan Kategori Produk</p>", unsafe_allow_html=True)
     st.dataframe(df_bar)
 
     # Membuat figure and axes
