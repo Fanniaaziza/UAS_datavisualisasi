@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # Fungsi untuk memuat Adventure Works data
 def load_adventure_works_data():
-    conn = st.connection("mydb" type="sql", autocommit=True)
+    conn = st.connection("mydb", type="sql", autocommit=True)
     
     # SQL query untuk mengambil yearly sales data
     query_sales = """
@@ -197,7 +197,7 @@ else:
     GROUP BY Country
     '''
 
-    conn = st.connection("mydb" type="sql", autocommit=True)
+    conn = st.connection("mydb", type="sql", autocommit=True)
 
     df_bubble = pd.read_sql(query_bubble, conn)
 
